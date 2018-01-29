@@ -96,6 +96,9 @@
 			// Change the presentation direction to be RTL
 			rtl: false,
 
+			// Change the presentation direction to be DTU
+			dtu: false,
+
 			// Randomizes the order of slides each time the presentation loads
 			shuffle: false,
 
@@ -2626,7 +2629,7 @@
 			for( var i = 0; i < slidesLength; i++ ) {
 				var element = slides[i];
 
-				var reverse = config.rtl && !isVerticalSlide( element );
+				var reverse = (config.rtl || config.dtu) && !isVerticalSlide( element );
 
 				element.classList.remove( 'past' );
 				element.classList.remove( 'present' );
@@ -2652,7 +2655,8 @@
 					element.classList.add( reverse ? 'future' : 'past' );
 
 					if( config.fragments ) {
-						var pastFragments = toArray( element.querySelectorAll( '.fragment' ) );
+						//var pastFragments = toArray( element.querySelectorAll( '.fragment' ) );
+						var pastFragments = toArray( element.querySelectorAll( '.fragment.visible' ) );
 
 						// Show all fragments on prior slides
 						while( pastFragments.length ) {
@@ -2667,7 +2671,8 @@
 					element.classList.add( reverse ? 'past' : 'future' );
 
 					if( config.fragments ) {
-						var futureFragments = toArray( element.querySelectorAll( '.fragment.visible' ) );
+						//var futureFragments = toArray( element.querySelectorAll( '.fragment.visible' ) );
+						var futureFragments = toArray( element.querySelectorAll( '.fragment' ) );
 
 						// No fragments in future slides should be visible ahead of time
 						while( futureFragments.length ) {
@@ -4267,7 +4272,7 @@
 	function navigateUp() {
 
 		// Prioritize hiding fragments
-		if( ( isOverview() || previousFragment() === false ) && availableRoutes().up ) {
+		if( ( isOverview() || nextFragment() === false ) && availableRoutes().up ) {
 			slide( indexh, indexv - 1 );
 		}
 
@@ -4278,7 +4283,7 @@
 		hasNavigatedDown = true;
 
 		// Prioritize revealing fragments
-		if( ( isOverview() || nextFragment() === false ) && availableRoutes().down ) {
+		if( ( isOverview() || previousFragment() === false ) && availableRoutes().down ) {
 			slide( indexh, indexv + 1 );
 		}
 
